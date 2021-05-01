@@ -17,3 +17,4 @@ Group Members: Audrena Vacirca, Nebiyu Kifle, Sian Culligan, Grace Choi
 
 ![Wireframe Image](assets/wireframe.png)
 
+### Requirements
