@@ -26,3 +26,5 @@ See the rest of the Software Requirements, [here](SoftwareRequirements.md).
 [Click here for a live link](https://lucid.app/lucidspark/invitations/accept/inv_4bfd9fa7-e295-4247-8b83-4c9a639f2799)
 
 ![Domain Model Image](assets/domain.png)  
+
+### Change Log
