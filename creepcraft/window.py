@@ -1,6 +1,20 @@
+from creepcraft.game import cube_position
 import pyglet
 from pyglet.window import mouse, key, clock
 import math 
+# import sys
+
+# TICKS_PER_SEC = 60
+# WALKING_SPEED = 5
+# FLYING_SPEED = 15
+# GRAVITY = 20.0
+# MAX_JUMP_HEIGHT = 1.0
+# JUMP_SPEED = math.sqrt(2 * GRAVITY * MAX_JUMP_HEIGHT)
+# TERMINAL_VELOCITY = 50
+# PLAYER_HEIGHT = 2
+
+# if sys.version_info[0] >= 3:
+#     xrange = range
 
 class Window(pyglet.window.Window):
 
@@ -21,7 +35,7 @@ class Window(pyglet.window.Window):
         # set velocity and upward direction for flying (y-axis)
         self.dy = 0
         # block texture
-        self.inventory = [brick, grass, sand]
+        self.inventory = [BRICK, GRASS, SAND]
         # allows you to pick inventory space - which gets placed on the screen
         self.block = self.inventory[0]
         # key mapping (number keys)
@@ -78,7 +92,7 @@ class Window(pyglet.window.Window):
         """Change in time since the last call (per second)."""
         # model methods = process_queue(), change_sectors(), process_entire_queue()
         self.model.process_queue()
-        sector = sectorize(self.position)
+        sector = play_space(self.position)
         if sector != self.sector:
             self.model.change_sectors(self.sector, sector)
             if self.sector == None:
@@ -139,29 +153,140 @@ class Window(pyglet.window.Window):
         """Called when mouse is pressed. 1 is left button, 4 is right button. Provides user mod control (choose blocks from inventory by type)."""
         if self.exclusive:
             vector = self.line_of_sight()
-            block, previous = self.model.
-
-        if button == mouse.LEFT:
-            pass
-        if button == mouse.RIGHT:
-            pass 
-
-
-    @window.event
-    def on_draw():
-        window.clear()
-        label.draw()
+            block, previous = self.model.find_block(self.position, vector)
+            if (button == mouse.RIGHT) or ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
+                if previous:
+                    self.model.add_block(previous, self.block)
+            elif button == pyglet.window.mouse.LEFT and block:
+                texture = self.model.world[block]
+                if texture != DIRT:
+                    self.model.remove_block(block)
+        else:
+            self.exclusive_mouse(True)
 
     @window.event
-    def on_key_press(symbol, modifiers):
-        print('A key was pressed')
+    def on_mouse_movement(self, x, y, dx, dy):
+        """[when user moves the mouse this is called]
+
+        Args:
+            x, y ([int]): [These are the coordinates of the mouse, always centered in line of sight]
+            
+            dx, dy ([type]): [coordinates of Where the mouse is moving]
+        """
+        if self.exclusive:
+            m = 0.15
+            x, y = self.rotation
+            x, y = x + dx * m, y + dy * m
+            y = max(-90, min(90, y))
+            self.rotation = (x, y)
+
+    @window.event
+    def key_press(self, symbol, modifiers):
+        """[key mapping via pyglet docs. called when user uses keyboard]
+
+        Args:
+            symbol ([int]): [key that was pressed]
+            modifiers ([int]): [key that was pressed and modified]
+        """
+        if symbol == key.W:
+            self.strafe[0] -= 1
+        elif symbol == key.S:
+            self.strafe[0] += 1
+        elif symbol == key.A:
+            self.strafe[1] -= 1
+        elif symbol == key.D:
+            self.strafe[1] += 1
+        elif symbol == key.SPACE:
+            if self.dy == 0:
+                self.dy = JUMP_SPEED
+        elif symbol == key.ESCAPE:
+            self.exclusive_mouse(False)
+        elif symbol == key.TAB:
+            self.flying = not self.flying
+        elif symbol in self.num_keys:
+            index = (symbol - self.num_keys[0]) % len(self.inventory)
+            self.block = self.inventory[index]
 
 
     # click escape while mouse hovers over window
     @window.event
-    def on_key_press_exit(symbol, modifiers):
-        if symbol == key.ESCAPE: # [ESC]
-            alive = 0
+    def key_release(self, symbol, modifiers):
+        """[key mapping via pyglet docs. called when user releases key]
 
-    
+        Args:
+            symbol ([int]): [key that was released]
+            modifiers ([int]): [key that was released and modified]
+        """
+        if symbol == key.W:
+            self.strafe[0] += 1
+        elif symbol == key.S:
+            self.strafe[0] -= 1
+        elif symbol == key.A:
+            self.strafe[1] += 1
+        elif symbol == key.D:
+            self.strafe[1] -= 1
 
+    def screen_resize(self, width, height):
+        """[resizes screen with new width and height]"""
+        # if we use a lable we will use self.label.y = height -10
+        if self.crosshairs:
+            self.crosshairs.delete()
+        x, y = self.width // 2, self.height // 2
+        n = 10
+        self.crosshairs = pyglet.graphics.vertex_list(4, ('v2i', (x - n, y, x, y-n, x, y + n)))
+
+    def draw_2d(self):
+        """[configure OpenGl to draw in 2d with pyglet]
+        """
+        width, height = self.get_size()
+        glDisable(GL_DEPTH_TEST)
+        viewport = self.get_viewport_size()
+        glViewport(0, 0, max(1, viewport[0]), max(1, viewport[1]))
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        glOrtho(0, max(1, width), 0, max(1, height), -1, 1)
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+
+    def draw_3d(self):
+        """[configure OpenGl to draw in 3d with pyglet]
+        """
+        width, height = self.get_size()
+        glEnable(GL_DEPTH_TEST)
+        viewport = self.get_viewport_size()
+        glViewport(0, 0, max(1, viewport[0]), max(1, viewport[1]))
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(65.0, width / float(height), 0.1, 60.0)
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+        x, y = self.rotation
+        glRotatef(x, 0, 1, 0)
+        glRotatef(-y, math.cos(math.radians(x)), 0, math.sin(math.radians(x)))
+        x, y, z = self.position
+        glTranslatef(-x, -y, -z)
+
+    def focused_block(self):
+        """[draws edges on block under crosshairs]
+        """
+        vector = self.line_of_sight()
+        block = self.model.find_block(self.position, vector)[0]
+        if block:
+            x, y, z = block
+            vertex_info = cube_position(x, y, z, 0.51)
+            glColor3d(0, 0, 0)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+            pyglet.graphics.draw(24, GL_QUADS, ('v3f/static', vertex_data))
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+
+    def draw(self):
+        """[pyglet calls this to draw on canvas]
+        """
+        self.clear()
+        self.draw_3d()
+        glColor3d(1, 1, 1)
+        self.model.batch.draw()
+        self.focused_block()
+        self.draw_2d()
+        self.draw_crosshairs()
+        
