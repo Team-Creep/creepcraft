@@ -9,6 +9,8 @@
 # STONE = texture_position((1, 0), (0,1), (0, 0))
 # DIRT = texture_position((1, 0), (0,1), (0, 0))
 
+from window import Window
+
 PLAY_SPACE_SIZE = 16
 FACES = [
     ( 0, 1, 0),
@@ -88,7 +90,8 @@ def main():
     # Hide the mouse cursor and it can't leave window.
     window.set_exclusive_mouse(True)
     set_up()
-    pyglet.app.run()
+    # pyglet.app.run()
+    app.run()
 
 
 if __name__ == '__main__':

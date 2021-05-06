@@ -111,6 +111,7 @@ class Model(object):
         x, y, z = position
         vertex_info = cube_position(x, y, z, 0.5)
         # create a list of info about texture
+        # need to create the labeled files in line 117&118
         texture_info = list(texture)
         self._shown[position] = self.batch.add(24, GL_QUADS, self.group,
             ('v3f/static', vertex_info),
