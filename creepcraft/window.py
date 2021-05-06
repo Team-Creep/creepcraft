@@ -1,6 +1,7 @@
-from creepcraft.game import cube_position
+# from creepcraft.game import cube_position
 import pyglet
-from pyglet.window import mouse, key, clock
+from pyglet import clock, app, image
+from pyglet.window import mouse, key
 import math 
 # import sys
 
@@ -15,6 +16,7 @@ import math
 
 # if sys.version_info[0] >= 3:
 #     xrange = range
+
 
 class Window(pyglet.window.Window):
 
@@ -148,7 +150,6 @@ class Window(pyglet.window.Window):
                     break
         return tuple(p)
         
-    @window.event
     def on_mouse_press(self, x, y, button, modifiers):
         """Called when mouse is pressed. 1 is left button, 4 is right button. Provides user mod control (choose blocks from inventory by type)."""
         if self.exclusive:
@@ -164,7 +165,6 @@ class Window(pyglet.window.Window):
         else:
             self.exclusive_mouse(True)
 
-    @window.event
     def on_mouse_movement(self, x, y, dx, dy):
         """[when user moves the mouse this is called]
 
@@ -180,7 +180,6 @@ class Window(pyglet.window.Window):
             y = max(-90, min(90, y))
             self.rotation = (x, y)
 
-    @window.event
     def key_press(self, symbol, modifiers):
         """[key mapping via pyglet docs. called when user uses keyboard]
 
@@ -209,7 +208,6 @@ class Window(pyglet.window.Window):
 
 
     # click escape while mouse hovers over window
-    @window.event
     def key_release(self, symbol, modifiers):
         """[key mapping via pyglet docs. called when user releases key]
 
@@ -290,3 +288,4 @@ class Window(pyglet.window.Window):
         self.draw_2d()
         self.draw_crosshairs()
         
+
