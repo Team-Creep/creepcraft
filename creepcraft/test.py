@@ -66,7 +66,6 @@ def normalize(position):
     x, y, z = (int(round(x)), int(round(y)), int(round(z)))
     return (x, y, z)
 
-
 def sectorize(position):
     """ Returns a tuple representing the sector for the given `position`.
     Parameters
@@ -80,7 +79,6 @@ def sectorize(position):
     sector_size = 16
     x, y, z = x // sector_size, y // sector_size, z // sector_size
     return (x, 0, z)
-
 
 class Model():
     def __init__(self):
