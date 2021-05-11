@@ -1,14 +1,19 @@
-from pyglet import image, app
+from pyglet import image, app, font
 from pyglet.gl import *
 from pyglet.window import key, mouse 
 import math
+
+font.add_file('Minecraft.ttf')
+minecraft = font.load('Minecraft', 10, bold=True)
 
 class Model:
     def __init__(self):
         # faces of block
         self.grass_top = self.get_tex('textures/grass_top.png')
         self.grass_side = self.get_tex('textures/grass_side.png')
-        self.grass_bottom = self.get_tex('textures/dirt.jpeg')
+        self.grass_bottom = self.get_tex('textures/grass_bottom.jpeg')
+        self.dirt = self.get_tex('textures/dirt.png')
+        self.dirt_grass = self.get_tex('textures/dirt_grass.png')
         self.stone = self.get_tex('textures/stone.png')
         self.batch = pyglet.graphics.Batch()
         self.current_world = {}
@@ -17,13 +22,14 @@ class Model:
 
     def get_tex(self,file):
         tex = pyglet.image.load(file).get_texture()
-        # fixes the pixelation of the block face (makes less blurry - min&max filter)
+        # fixes the pixelation of the block face (makes less blurry - min & max(mag) filter)
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
         return pyglet.graphics.TextureGroup(tex)
 
     def add_block(self, x, y, z, texture):
-        # self.current_world[(x,y,z)] = self.player.pos
+        position = x, y, z
+        self.current_world[position] = texture
 
         # need to do: add texture parameter to specify which type of block
 
@@ -51,9 +57,10 @@ class Model:
         self.batch.add(4, GL_QUADS, texture[2], ('v3f', (x,y,z,  X,y,z,  X,y,Z,  x,y,Z)), tex_coords)  
         self.batch.add(4, GL_QUADS, texture[1], ('v3f', (x,Y,Z,  X,Y,Z,  X,Y,z,  x,Y,z)), tex_coords)  
 
-    def remove_block(self, x, y, z):
-        # del self.current_world[(x,y-1,z-3)]
-        pass
+    def remove_block(self, position):
+        position = x,y,z 
+        del self.current_world[position]
+        # pass
 
     def starter_world(self):
         GRASS = [self.grass_side, self.grass_top, self.grass_bottom]
@@ -83,45 +90,55 @@ class Player:
 
     def update(self,dt,keys):
         """Actually updates the window based on 'dt' (ticks per second)"""
-        slower = .5
+        # slower = .5
+        slower = 1
         s = dt*10
-        rotY = -self.rot[1]/180*math.pi
+        # rotY = -self.rot[1]/180*math.pi
         # dx,dy are the velocity used to change the position of the player within the world 
         # key handler - if key pressed is True, change position
-        dx, dz = s*math.sin(rotY), s*math.cos(rotY)
+        # dx, dz = s*math.sin(rotY), s*math.cos(rotY)
         # pos[0]: x (left/right)
         # pos[2]: z (front/back)
         if keys[key.W]: # walk forward
             # 2 -> front limit
-            if self.pos[2] >= 2:
-                self.pos[0] += dx*slower
-                self.pos[2] -= dz*slower
+            if self.pos[2] >= 3:
+                # self.pos[0] += dx*slower
+                # self.pos[2] -= dz*slower
+                self.pos[2] -= 1*slower
         if keys[key.S]: # walk backwards
-            if self.pos[2] <= 49:
-                self.pos[0] -= dx*slower
-                self.pos[2] += dz*slower
+            if self.pos[2] <= 46:
+                # self.pos[0] -= dx*slower
+                # self.pos[2] += dz*slower
+                self.pos[2] += 1*slower
         if keys[key.A]: # left
             if self.pos[0] >= 2:
-                self.pos[0] -= dz*slower
-                self.pos[2] -= dx*slower
+                # self.pos[0] -= dz*slower
+                self.pos[0] -= 1*slower
+                # self.pos[2] -= dx*slower
         if keys[key.D]: # right
-            if self.pos[0] <= 48:
-                self.pos[0] += dz*slower
-                self.pos[2] += dx*slower
+            if self.pos[0] <= 47:
+                # self.pos[0] += dz*slower
+                self.pos[0] += 1*slower
+                # self.pos[2] += dx*slower
         # pos[1]: y (up/down)
         if keys[key.SPACE]: # up
             # 6 -> jump limit
             if self.pos[1] <= 6:
-                self.pos[1] += s
+                # self.pos[1] += s
+                self.pos[1] += 1*slower
         if keys[key.LSHIFT]: # down
             # 2 -> floor limit
-            if self.pos[1] >= 2:
-                self.pos[1] -= s
+            if self.pos[1] >= 3:
+                # self.pos[1] -= s
+                self.pos[1] -= 1*slower
 
 class Window(pyglet.window.Window):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.logo = pyglet.image.load('logo.png')
+        self.cloud = pyglet.image.load('textures/clouds.png')
+        # self.score_batch = pyglet.graphics.Batch()
+        # self.score_label = pyglet.text.Label("Score: 0", font_name='Minecraft', font_size=9, x=0, y=18, batch=self.score_batch)
         # min size of window so it doesn't error out if user tries to make it too small
         self.set_minimum_size(400,300)
         # key state handler holds a bool value - https://pythonhosted.org/pyglet/api/pyglet.window.key.KeyStateHandler-class.html
@@ -156,6 +173,7 @@ class Window(pyglet.window.Window):
         # updates key events from Player class (changing player position with movement controls)
         self.player.update(dt, self.keys)
 
+
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ESCAPE:
             self.close()
@@ -165,19 +183,38 @@ class Window(pyglet.window.Window):
         # create method if we get to the point of adding rotation perspective
         pass
 
-    def on_mouse_press(self, x, y, button, modifiers):
+    def get_score(self):
+        # starter world contains 5244 blocks
+        score = 5244
+        current_blocks = len(self.model.current_world)
+        current_score = current_blocks - score
+        # print(current_score)
+        return current_score
+
+    def on_mouse_press(self, x, y, button, modifiers, batch=None):
         # https://pyglet.readthedocs.io/en/latest/programming_guide/mouse.html 
         # The x and y parameters give the coordinates of the mouse pointer, relative to the bottom-left corner of the window.
-        x,y,z = self.player.pos 
-        GRASS = [self.model.grass_side, self.model.grass_top, self.model.grass_bottom]
+        DIRT_GRASS = [self.model.dirt, self.model.dirt_grass, self.model.grass_bottom]
         STONE = [self.model.stone, self.model.stone, self.model.stone]
-        if button == mouse.RIGHT:
-            print("right button clicked")
-            self.model.remove_block(x,y,z)
-            # print("block deleted")
-        elif button == mouse.LEFT:
-            print("block created")
-            self.model.add_block(x,y-1,z-3,GRASS)
+        x,y,z = self.player.pos 
+        if button == mouse.LEFT:
+            # print("block created")
+            # print(self.model.current_world[-1])
+            self.model.add_block(x,y-1,z-3,DIRT_GRASS)
+            print("player position: ", self.player.pos)
+            els = list(self.model.current_world.items())
+            print("block created at: ", els[-1])
+            print("current score: ", self.get_score())
+            # score = pyglet.sprite.Sprite(batch=self.score_batch)
+        elif button == mouse.RIGHT:
+            # position = x,y-1,z-3
+            # if self.model.current_world[position]:
+            #     self.model.remove_block(position)
+            # # els = list(self.model.current_world.items())
+            #     print("delete button clicked / player position: ", self.player.pos)
+            # else:
+            #     print("no blocks to remove")
+            print("block deletion feature not ready")
 
     def collision(self, position):
         pass
@@ -198,6 +235,14 @@ class Window(pyglet.window.Window):
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         self.logo.blit(5,6,2, width=40, height=8)
+        self.cloud.blit(-14,16,4, width=15, height=5)
+        self.cloud.blit(-12,20,12, width=18, height=12)
+        self.cloud.blit(8,16,6, width=25, height=8)
+        self.cloud.blit(16,20,8, width=35, height=10)
+        self.cloud.blit(52,20,10, width=35, height=6)
+        # self.get_score()
+        # self.score_label.draw()
+        # self.score_batch.draw()
         
 def setup():
     # # color codes: https://pemavirtualhub.wordpress.com/2016/06/20/opengl-color-codes/
