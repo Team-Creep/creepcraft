@@ -15,9 +15,9 @@ class Model:
         self.dirt_grass = self.get_tex('textures/dirt_grass.png')
         self.stone = self.get_tex('textures/stone.png')
         self.batch = pyglet.graphics.Batch()
+        self.current_world = {}
         self.player = Player()
         self.starter_world()
-        self.current_world = {}
 
     def get_tex(self,file):
         """Takes in a file to create a texturized image with focus specification (makes less blurry - min & max(mag) filter)."""
