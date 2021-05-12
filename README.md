@@ -15,7 +15,7 @@ Group Members: Audrena Vacirca, Nebiyu Kifle, Sian Culligan, Grace Choi
 
 ### MVP Wireframe
 
-![Wireframe Image](assets/wireframe.png)
+![Wireframe Image](prep_assets/wireframe.png)
 
 ### Requirements
 The vision of this project is to create a landscape world that allows the user to login and create and destroy blocks. These blocks can be used to build a digital world. This game allows a user to expand their creativity and kill boredom. Our first goal is to let the user expand on their creativity. Our stretch goal is to have a Survival mode that challenges the user to survive in their constructed universe (build shelter, find food, and craft tools). 
@@ -25,6 +25,6 @@ See the rest of the Software Requirements, [here](SoftwareRequirements.md).
 ### Domain Model
 [Click here for a live link](https://lucid.app/lucidspark/invitations/accept/inv_4bfd9fa7-e295-4247-8b83-4c9a639f2799)
 
-![Domain Model Image](assets/domain.png)  
+![Domain Model Image](prep_assets/domain.png)  
 
 ### Change Log
