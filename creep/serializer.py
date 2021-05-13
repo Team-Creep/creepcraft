@@ -3,5 +3,5 @@ from .models import Creep
 
 class CreepSerializer(serializers.ModelSerializer):
   class Meta:
-    fields = ['id', 'user', 'name', 'highscores']
+    fields = ['id', 'user', 'name', 'highscores', 'gamename']
     model = Creep
