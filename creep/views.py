@@ -14,7 +14,11 @@ class CreepDetail(RetrieveUpdateDestroyAPIView):
 
 from django.http import HttpResponse
 
-# def scores(request):
-#   score_file = open('creepcraft/scores.txt')
-#   highscore = score_file.readlines()
-#   return HttpResponse("it's working")
+def scores(request):
+  score_file = open('creepcraft/scores.txt')
+  highscores = score_file.readlines()
+  score_obj = Creep(highscores=highscores[0])
+  score_obj.save()
+  return HttpResponse("it's working")
+
+
