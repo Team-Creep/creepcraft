@@ -3,6 +3,7 @@ from pyglet import image, app, font
 from pyglet.gl import *
 from pyglet.window import key, mouse 
 import math
+import re
 
 class Model:
     """Model class: world features of the game (block creation, block textures, add block method, and starter world)."""
@@ -137,7 +138,8 @@ class Window(pyglet.window.Window):
         pyglet.clock.schedule(self.update)
         self.model = Model()
         self.player = Player()
-        self.name = input("Enter username: ")
+        # self.name = input("Enter username: ")
+        # self.current_hs = self.current_highscore()
 
     def Projection(self):
         """Defines the perspective (set between 2d and 3d) - in order to see the world."""
@@ -171,15 +173,28 @@ class Window(pyglet.window.Window):
             self.close()
             final_score = self.get_score()
             print("final score", final_score)
-            collect_user = open('scores.txt', "a")
-            user_score = self.name + ', ' + str(final_score) + '\n'
+            # collect_user = open('scores.txt', "a")
+            collect_user = open('scores.txt', "w")
+            # user_score = self.name + ': ' + str(final_score) + '\n'
+            user_score = str(final_score)
             collect_user.write(user_score)
-
+            return user_score
 
     def on_mouse_motion(self, x, y, dx, dy):
         # stretch goal
         # create method if we get to the point of adding rotation perspective
         pass
+
+    # def current_highscore(self):
+    #     file = 'scores.txt'
+    #     symbol = key.ESCAPE
+    #     new_score = self.on_key_press(self, symbol)
+
+    #     if int(data) > int(new_score):
+    #         with open(file, "w") as f:
+    #             f.write(new_score)
+
+
 
     def get_score(self):
         """Score counter (per blocks created). Starter world contains 5244 blocks."""

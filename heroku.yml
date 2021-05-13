@@ -1,0 +1,11 @@
+setup:
+  addons:
+  - plan: heroku-postgresql
+    as: DATABASE
+build:
+  docker:
+    web: Dockerfile
+run:
+  # web process must listen for HTTP traffic on $PORT, which is set by Heroku
+  # interview_prep --> my project name
+  web: gunicorn creep_project.wsgi:application --bind 0.0.0.0:$PORT
