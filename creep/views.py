@@ -11,3 +11,14 @@ class CreepList(ListCreateAPIView):
 class CreepDetail(RetrieveUpdateDestroyAPIView):
   queryset = Creep.objects.all()
   serializer_class = CreepSerializer
+
+# from django.http import HttpResponse
+
+# def scores(request):
+#   score_file = open('creepcraft/scores.txt')
+#   highscores = score_file.readlines()
+#   score_obj = Creep(highscores=highscores)
+#   score_obj.save()
+#   return HttpResponse("it's working")
+
+
