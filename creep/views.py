@@ -8,10 +8,13 @@ class CreepList(ListCreateAPIView):
   queryset = Creep.objects.all()
   serializer_class = CreepSerializer
 
+
+# https://stackoverflow.com/questions/49056546/put-method-not-working-on-retrieveupdatedestroyapiview-django-rest-framework-ang
 class CreepDetail(RetrieveUpdateDestroyAPIView):
   queryset = Creep.objects.all()
   serializer_class = CreepSerializer
 
+  
 # from django.http import HttpResponse
 
 # def scores(request):
