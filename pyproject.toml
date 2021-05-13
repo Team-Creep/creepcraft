@@ -7,6 +7,14 @@ authors = ["nebiyu kifle <rema9.ne@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 Django = "^3.2.2"
+django-environ = "^0.4.5"
+gunicorn = "^20.1.0"
+djangorestframework = "^3.12.4"
+djangorestframework-simplejwt = "^4.6.0"
+psycopg2-binary = "^2.8.6"
+whitenoise = "^5.2.0"
+django-cors-headers = "^3.7.0"
+dj-database-url = "^0.5.0"
 
 [tool.poetry.dev-dependencies]
 
