@@ -1,6 +1,6 @@
 from django.urls import path
 # from .views import HomePageView, AboutView
-from .views import CreepList, CreepDetail
+from .views import CreepList, CreepDetail, CreepUpdate
 
 # urlpatterns = [
 #   path('',HomePageView.as_view(), name='home'),
@@ -9,6 +9,7 @@ from .views import CreepList, CreepDetail
 
 urlpatterns = [
   path('', CreepList.as_view(), name='creep_list'),
-  path('put/<int:pk>', CreepDetail.as_view(), name='creep_update'),
-  path('<int:pk>/', CreepDetail.as_view(), name='creep_detail')
+  path('<int:pk>/', CreepDetail.as_view(), name='creep_detail'),
+  path('<int:pk>/edit/', CreepUpdate.as_view(), name='creep_update')
+
 ]
