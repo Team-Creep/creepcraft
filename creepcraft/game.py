@@ -194,8 +194,6 @@ class Window(pyglet.window.Window):
     #         with open(file, "w") as f:
     #             f.write(new_score)
 
-
-
     def get_score(self):
         """Score counter (per blocks created). Starter world contains 5244 blocks."""
         starter = 5244
