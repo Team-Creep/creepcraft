@@ -11,13 +11,3 @@ class CreepList(ListCreateAPIView):
 class CreepDetail(RetrieveUpdateDestroyAPIView):
   queryset = Creep.objects.all()
   serializer_class = CreepSerializer
-
-
-# class BlogList(ListCreateAPIView):
-#    queryset = Post.objects.all()
-#    serializer_class = PostSerializer
-
-# class BlogDetail(RetrieveUpdateDestroyAPIView):
-#    permission_classes = (IsOwnerOrReadOnly,)
-#    queryset = Post.objects.all()
-#    serializer_class = PostSerializer
