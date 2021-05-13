@@ -14,10 +14,10 @@ class CreepDetail(RetrieveUpdateDestroyAPIView):
   queryset = Creep.objects.all()
   serializer_class = CreepSerializer
 
-class CreepUpdate(RetrieveUpdateDestroyAPIView):
-  queryset = Creep.objects.all()
-  serializer_class = CreepSerializer
-  fields = ('name', 'highscores')
+# class CreepUpdate(RetrieveUpdateDestroyAPIView):
+#   queryset = Creep.objects.all()
+#   serializer_class = CreepSerializer
+#   fields = ('name', 'highscores')
 
 
 # from django.http import HttpResponse
