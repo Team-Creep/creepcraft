@@ -1,3 +1,4 @@
+import pyglet
 from pyglet import image, app, font
 from pyglet.gl import *
 from pyglet.window import key, mouse 
@@ -171,7 +172,7 @@ class Window(pyglet.window.Window):
             final_score = self.get_score()
             print("final score", final_score)
             collect_user = open('scores.txt', "a")
-            user_score = self.name + ',' + str(final_score) + '\n'
+            user_score = self.name + ', ' + str(final_score) + '\n'
             collect_user.write(user_score)
 
 
