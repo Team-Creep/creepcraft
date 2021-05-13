@@ -8,7 +8,6 @@ class Creep(models.Model):
   user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
   name = models.CharField(max_length=64)
   highscores = models.IntegerField(max_length=None)
-  gamename = models.CharField(max_length=50, default='CREEPCRAFT')
 
   def __str__(self):
     return self.name
