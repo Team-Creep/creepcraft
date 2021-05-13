@@ -9,5 +9,5 @@ from .views import CreepList, CreepDetail
 
 urlpatterns = [
   path('', CreepList.as_view(), name='creep_list'),
-  path('<int:pk>/', CreepDetail.as_view(), name='creep_detail')
+  path('/<int:pk>/', CreepDetail.as_view(), name='creep_detail')
 ]
