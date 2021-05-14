@@ -20,4 +20,5 @@ Simple Minecraft-inspired playground written in Python, Pyglet, and OpenGL.
 **esc**: end game  
 
 ### Mouse Control
-**left click**: add block   
+**left click**: add dirt block    
+**right click**: add brick block   
