@@ -16,6 +16,7 @@ class Model:
         self.dirt = self.get_tex('textures/dirt.png') 
         self.dirt_grass = self.get_tex('textures/dirt_grass.png') 
         self.stone = self.get_tex('textures/stone.png') 
+        self.brick = self.get_tex('textures/brick.png') 
         self.batch = pyglet.graphics.Batch() 
         self.current_world = {} 
         self.player = Player() 
@@ -207,17 +208,24 @@ class Window(pyglet.window.Window):
         # The x and y parameters give the coordinates of the mouse pointer, relative to the bottom-left corner of the window.
         DIRT_GRASS = [self.model.dirt, self.model.dirt_grass, self.model.grass_bottom]
         STONE = [self.model.stone, self.model.stone, self.model.stone]
+        BRICK = [self.model.brick, self.model.brick, self.model.brick]
         x,y,z = self.player.pos 
+        els = list(self.model.current_world.items())
         if button == mouse.LEFT:
             # print("block created")
             # print(self.model.current_world[-1])
             self.model.add_block(x,y-1,z-3,DIRT_GRASS)
-            print("player position: ", self.player.pos)
-            els = list(self.model.current_world.items())
-            print("block created at: ", els[-1])
+            # print("player position: ", self.player.pos)
+            # els = list(self.model.current_world.items())
+            print("block created at: ", els[-1][0])
             print("current score: ", self.get_score())
             # score = pyglet.sprite.Sprite(batch=self.score_batch)
         elif button == mouse.RIGHT:
+            self.model.add_block(x,y-1,z-3,BRICK)
+            print("block created at: ", els[-1][0])
+            print("current score: ", self.get_score())
+
+            # stretch: remove block on right click
             # position = x,y-1,z-3
             # if self.model.current_world[position]:
             #     self.model.remove_block(position)
@@ -225,7 +233,7 @@ class Window(pyglet.window.Window):
             #     print("delete button clicked / player position: ", self.player.pos)
             # else:
             #     print("no blocks to remove")
-            print("block deletion feature not ready")
+            # print("block deletion feature not ready")
 
     def collision(self, position):
         """stretch goal to check for player collision against blocks"""
