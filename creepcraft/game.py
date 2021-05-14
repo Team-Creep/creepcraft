@@ -141,6 +141,7 @@ class Window(pyglet.window.Window):
         self.player = Player()
         # self.name = input("Enter username: ")
         # self.current_hs = self.current_highscore()
+        self.creeper = pyglet.image.load('assets/creeping_roger.png')
 
     def Projection(self):
         """Defines the perspective (set between 2d and 3d) - in order to see the world."""
@@ -260,6 +261,7 @@ class Window(pyglet.window.Window):
         self.cloud.blit(-12,20,12, width=18, height=12)
         self.cloud.blit(8,16,6, width=25, height=8)
         self.cloud.blit(16,20,8, width=35, height=10)
+        self.creeper.blit(22,24,7, width=16, height=14)
         self.cloud.blit(52,20,10, width=35, height=6)
         # self.get_score()
         # self.score_label.draw()
