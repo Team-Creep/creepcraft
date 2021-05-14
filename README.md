@@ -28,3 +28,14 @@ See the rest of the Software Requirements, [here](SoftwareRequirements.md).
 ![Domain Model Image](prep_assets/domain.png)  
 
 ### Change Log
+5/1: Project Prep Added  
+5/3: File Structure Added  
+5/4: Tutorial Files Started  
+5/6: Base landscape  
+5/7: Base movement and border walls
+5/8: Django added. Sky & Floor movement limits, set textures, and mouse clicks  
+5/10: Scoring and adding clocks in position  
+5/11: Docker added and db connected  
+5/12: Deployment  
+5/13: New texture added and gameplay instructions added  
+
