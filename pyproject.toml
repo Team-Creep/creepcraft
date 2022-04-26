@@ -6,7 +6,7 @@ authors = ["nebiyu kifle <rema9.ne@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-Django = "^3.2.10"
+Django = "^3.2.13"
 django-environ = "^0.4.5"
 gunicorn = "^20.1.0"
 djangorestframework = "^3.12.4"
